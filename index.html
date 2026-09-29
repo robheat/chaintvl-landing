@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ChainTVL: Cross-Chain TVL &amp; Capital Flow Tracker</title>
+<meta name="description" content="ChainTVL tracks total value locked and stablecoin supply across 50+ blockchains, and shows where crypto capital is moving between chains.">
+<meta property="og:title" content="ChainTVL: Cross-Chain TVL & Capital Flow Tracker">
+<meta property="og:description" content="TVL across every major blockchain, and where capital is moving between them.">
+<meta property="og:image" content="https://www.chaintvl.com/opengraph-image">
+<meta property="og:url" content="https://robheat.github.io/chaintvl-landing/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' rx='64' fill='%2315171c'/%3E%3Cg transform='translate(40 40) scale(0.6875)' fill='%233987e5'%3E%3Cpath d='M216.49,184.49l-32,32a12,12,0,0,1-17-17L179,188H48a12,12,0,0,1,0-24H179l-11.52-11.51a12,12,0,0,1,17-17l32,32A12,12,0,0,1,216.49,184.49Zm-145-64a12,12,0,0,0,17-17L77,92H208a12,12,0,0,0,0-24H77L88.49,56.49a12,12,0,0,0-17-17l-32,32a12,12,0,0,0,0,17Z'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #08090b;
+    --bg-elevated: #15171c;
+    --border: rgba(255,255,255,0.09);
+    --text: #f5f6f8;
+    --text-muted: #a6abb8;
+    --text-faint: #6d7180;
+    --accent: #3987e5;
+    --accent-button: #2f74cc;
+    --accent-button-hover: #2866b5;
+    --accent-soft: rgba(57,135,229,0.14);
+    --radius: 14px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { color-scheme: dark; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+  a { color: inherit; }
+
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    height: 68px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+  }
+
+  .brand-mark {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: rgba(57,135,229,0.12);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .brand span em { font-style: normal; color: var(--accent); }
+
+  .nav-cta, .cta-primary {
+    display: inline-flex;
+    align-items: center;
+    background: var(--accent-button);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 999px;
+    white-space: nowrap;
+    transition: transform 0.15s cubic-bezier(0.16,1,0.3,1), background 0.15s;
+  }
+
+  .nav-cta { font-size: 0.88rem; padding: 9px 16px; }
+  .cta-primary { font-size: 0.98rem; padding: 14px 24px; }
+
+  .nav-cta:hover, .cta-primary:hover { background: var(--accent-button-hover); }
+  .cta-primary:hover { transform: translateY(-1px); }
+  .nav-cta:active, .cta-primary:active { transform: scale(0.98); }
+
+  .hero {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 56px;
+    align-items: center;
+    padding: 72px 0 88px;
+  }
+
+  .byline {
+    font-family: 'Geist Mono', ui-monospace, monospace;
+    font-size: 0.78rem;
+    color: var(--text-faint);
+    margin: 0 0 18px;
+  }
+
+  h1 {
+    font-size: clamp(2.4rem, 4.4vw, 3.4rem);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    margin: 0 0 20px;
+    font-weight: 600;
+  }
+
+  h1 em { font-style: normal; color: var(--accent); }
+
+  .hero-sub {
+    font-size: 1.08rem;
+    color: var(--text-muted);
+    max-width: 46ch;
+    margin: 0 0 30px;
+  }
+
+  .hero-art {
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: 0 30px 80px -30px rgba(57,135,229,0.35);
+    aspect-ratio: 1200 / 630;
+    background: var(--bg-elevated);
+  }
+
+  .hero-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  section { padding: 64px 0; border-top: 1px solid var(--border); }
+
+  .section-head { max-width: 60ch; margin: 0 0 36px; }
+
+  h2 {
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    letter-spacing: -0.02em;
+    margin: 0 0 14px;
+    font-weight: 600;
+  }
+
+  .section-head p { color: var(--text-muted); margin: 0; }
+
+  .pills { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  .pill {
+    font-size: 0.88rem;
+    color: var(--text);
+    border: 1px solid var(--border);
+    background: var(--bg-elevated);
+    padding: 8px 16px;
+    border-radius: 999px;
+  }
+
+  .pill.more { color: var(--text-faint); background: transparent; }
+
+  .bento {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 16px;
+  }
+
+  .bento-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+  }
+
+  .bento-card.wide {
+    grid-row: 1 / 3;
+    background: linear-gradient(160deg, var(--accent-soft), var(--bg-elevated) 60%);
+  }
+
+  .bento-card h3 { font-size: 1.15rem; margin: 0 0 10px; letter-spacing: -0.01em; font-weight: 600; }
+
+  .bento-card p { color: var(--text-muted); font-size: 0.95rem; margin: 0; line-height: 1.6; }
+
+  .stat {
+    font-family: 'Geist Mono', ui-monospace, monospace;
+    font-size: 2.4rem;
+    font-weight: 500;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .card-links { margin-top: 16px; }
+
+  .card-links a {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.92rem;
+    text-decoration: none;
+  }
+
+  .card-links a:hover { text-decoration: underline; }
+
+  footer { border-top: 1px solid var(--border); padding: 40px 0; }
+
+  .footer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .footer-row p { color: var(--text-faint); font-size: 0.85rem; margin: 0; }
+
+  .footer-links { display: flex; gap: 20px; }
+
+  .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; }
+  .footer-links a:hover { color: var(--accent); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-cta, .cta-primary { transition: none; }
+  }
+
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; gap: 36px; padding: 44px 0 56px; }
+    .bento { grid-template-columns: 1fr; }
+    .bento-card.wide { grid-row: auto; }
+    nav { height: 60px; }
+  }
+
+  @media (max-width: 420px) {
+    .nav-cta { font-size: 0.8rem; padding: 8px 12px; }
+    .brand { font-size: 0.95rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav>
+    <a class="brand" href="#top">
+      <span class="brand-mark" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor"><path d="M216.49,184.49l-32,32a12,12,0,0,1-17-17L179,188H48a12,12,0,0,1,0-24H179l-11.52-11.51a12,12,0,0,1,17-17l32,32A12,12,0,0,1,216.49,184.49Zm-145-64a12,12,0,0,0,17-17L77,92H208a12,12,0,0,0,0-24H77L88.49,56.49a12,12,0,0,0-17-17l-32,32a12,12,0,0,0,0,17Z"/></svg>
+      </span>
+      <span>Chain<em>TVL</em></span>
+    </a>
+    <a class="nav-cta" href="https://chaintvl.com" target="_blank" rel="noopener">Open the dashboard</a>
+  </nav>
+</div>
+
+<div class="wrap">
+  <div class="hero" id="top">
+    <div>
+      <p class="byline">Data from DefiLlama · refreshed every 5 minutes</p>
+      <h1>Every chain's TVL, <em>one dashboard</em>.</h1>
+      <p class="hero-sub">ChainTVL tracks total value locked and stablecoin supply across 50+ blockchains, and models how capital shifts between them.</p>
+      <a class="cta-primary" href="https://chaintvl.com" target="_blank" rel="noopener">Open the dashboard →</a>
+    </div>
+    <div class="hero-art">
+      <img src="https://www.chaintvl.com/opengraph-image" alt="ChainTVL: track TVL across every major blockchain" width="1200" height="630">
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <section>
+    <div class="section-head">
+      <h2>From Ethereum to the long tail.</h2>
+      <p>The biggest chains by TVL sit alongside dozens of smaller ones, all ranked in one table.</p>
+    </div>
+    <div class="pills">
+      <span class="pill">Ethereum</span>
+      <span class="pill">Solana</span>
+      <span class="pill">Base</span>
+      <span class="pill">BSC</span>
+      <span class="pill">Tron</span>
+      <span class="pill">Bitcoin</span>
+      <span class="pill">Arbitrum</span>
+      <span class="pill more">and dozens more</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>Where capital sits, and where it's going.</h2>
+      <p>A snapshot of every chain, plus two views for spotting movement.</p>
+    </div>
+    <div class="bento">
+      <div class="bento-card wide">
+        <span class="stat">50+</span>
+        <h3>Chains in one live table</h3>
+        <p>TVL with 24-hour, 7-day and 30-day change, plus stablecoin supply, for the top 50 chains. Aggregate DeFi TVL and total tracked stablecoin supply sit at the top.</p>
+      </div>
+      <div class="bento-card">
+        <h3>Flows between chains</h3>
+        <p>Charts of how capital is reallocating between chains, refreshed every 15 minutes. It's modeled from TVL changes, not raw bridge transfers.</p>
+        <div class="card-links"><a href="https://www.chaintvl.com/flows" target="_blank" rel="noopener">Open flows →</a></div>
+      </div>
+      <div class="bento-card">
+        <h3>Side-by-side comparison</h3>
+        <p>Put chains next to each other and compare their TVL and trends directly.</p>
+        <div class="card-links"><a href="https://www.chaintvl.com/compare" target="_blank" rel="noopener">Open compare →</a></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="wrap footer-row">
+    <p>Built on DefiLlama's public APIs. Not financial advice.</p>
+    <div class="footer-links">
+      <a href="https://chaintvl.com" target="_blank" rel="noopener">chaintvl.com</a>
+      <a href="https://tokenbuybacks.app" target="_blank" rel="noopener">Also: Token Buybacks</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
